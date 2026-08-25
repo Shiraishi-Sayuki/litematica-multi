@@ -7,6 +7,10 @@ logs/
 .classpath
 .project
 build.number
+run
+.vscode
+libs/
 .idea/
 run/
 libs/
+**/libs/
