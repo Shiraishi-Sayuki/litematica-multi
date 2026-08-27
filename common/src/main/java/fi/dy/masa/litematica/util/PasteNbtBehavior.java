@@ -13,7 +13,7 @@ public enum PasteNbtBehavior implements IConfigOptionListEntry, StringIdentifiab
     PLACE_MODIFY    ("place_data_modify", "litematica.gui.label.paste_nbt_behavior.place_data_modify"),
     PLACE_CLONE     ("place_clone",       "litematica.gui.label.paste_nbt_behavior.place_clone");
 
-    public static final StringIdentifiable.EnumCodec<PasteNbtBehavior> CODEC = StringIdentifiable.createCodec(PasteNbtBehavior::values);
+    public static final StringIdentifiable.Codec<PasteNbtBehavior> CODEC = StringIdentifiable.createCodec(PasteNbtBehavior::values);
     public static final ImmutableList<PasteNbtBehavior> VALUES = ImmutableList.copyOf(values());
 
     private final String configString;

@@ -613,7 +613,7 @@ public class DataManager implements IDirectoryCache
      */
     public static void setToolItem(String itemNameIn)
     {
-        toolItem = InventoryUtils.getItemStackFromString(itemNameIn);
+        toolItem = fi.dy.masa.litematica.util.InventoryUtils.getItemStackFromString(itemNameIn);
 
         if (toolItem == null)
         {
@@ -637,7 +637,7 @@ public class DataManager implements IDirectoryCache
         }
         else
         {
-            this.toolItemComponents = InventoryUtils.getItemStackFromString(toolItemString, registryManager);
+            this.toolItemComponents = fi.dy.masa.litematica.util.InventoryUtils.getItemStackFromString(toolItemString, registryManager);
         }
 
         if (this.toolItemComponents == null)

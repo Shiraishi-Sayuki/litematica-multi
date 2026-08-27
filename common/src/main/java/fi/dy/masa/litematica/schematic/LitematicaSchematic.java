@@ -544,7 +544,7 @@ public class LitematicaSchematic
 
                             try
                             {
-                                te.read(teNBT, world.getRegistryManager());
+                                te.readNbt(teNBT);
 
                                 if (ignoreInventories && te instanceof Inventory)
                                 {
@@ -798,7 +798,7 @@ public class LitematicaSchematic
                             {
                                 // TODO Add a TileEntity NBT cache from the Chunk packets, to get the original synced data (too)
                                 BlockPos pos = new BlockPos(x, y, z);
-                                NbtCompound tag = te.createNbtWithId(world.getRegistryManager());
+                                NbtCompound tag = te.createNbtWithId();
                                 NbtUtils.writeBlockPosToTag(pos, tag);
                                 tileEntityMap.put(pos, tag);
                             }
@@ -891,7 +891,7 @@ public class LitematicaSchematic
     public static boolean isGravityBlock(BlockState state)
     {
         return state.isIn(BlockTags.SAND) ||
-               state.isIn(BlockTags.CONCRETE_POWDER) ||
+               state.getBlock() instanceof net.minecraft.block.ConcretePowderBlock ||
                state.getBlock() == Blocks.GRAVEL;
     }
 
@@ -1041,7 +1041,7 @@ public class LitematicaSchematic
                             if (te != null)
                             {
                                 BlockPos pos = new BlockPos(x, y, z);
-                                NbtCompound tag = te.createNbtWithId(world.getRegistryManager());
+                                NbtCompound tag = te.createNbtWithId();
                                 NbtUtils.writeBlockPosToTag(pos, tag);
                                 tileEntityMap.put(pos, tag);
                             }
@@ -1296,7 +1296,7 @@ public class LitematicaSchematic
 
         output.putString("Task", "Litematic-TransmitStart");
         //output.put("FileType", FileType.CODEC, this.schematicType);
-        output.put("FileType", FileType.CODEC.encodeStart(NbtOps.INSTANCE, this.schematicType).getOrThrow());
+        output.put("FileType", FileType.CODEC.encodeStart(NbtOps.INSTANCE, this.schematicType).result().get());
         output.putLong("SliceKey", sessionKey);
         output.putInt("TotalSlices", totalSlices);
         output.putLong("TotalSize", totalBytes);
@@ -1382,7 +1382,7 @@ public class LitematicaSchematic
             case "Litematic-TransmitStart" ->
             {
                 //FileType type = nbt.get("FileType", FileType.CODEC).orElse(FileType.LITEMATICA_SCHEMATIC);
-                FileType type = FileType.CODEC.parse(NbtOps.INSTANCE, nbt.get("FileType")).getPartialOrThrow();
+                FileType type = FileType.CODEC.parse(NbtOps.INSTANCE, nbt.get("FileType")).result().get();
                 final int totalSlices = nbt.getInt("TotalSlices");
                 final long totalSize = nbt.getLong("TotalSize");
 
@@ -2521,25 +2521,9 @@ public class LitematicaSchematic
                 // Don't crash on invalid ResourceLocation in 1.13+
                 try
                 {
-                    Optional<RegistryEntry.Reference<T>> opt = registry.getEntry(Identifier.tryParse(tag.getString(tagName)));
+                    target = registry.get(Identifier.tryParse(tag.getString(tagName)));
 
-                    //target = registry.get(Identifier.tryParse(tag.getString(tagName)));
-                    //if (target == null || target == emptyValue)
-                    //{
-                        //continue;
-                    //}
-                    if (opt.isPresent())
-                    {
-                        if (opt.get().hasKeyAndValue())
-                        {
-                            target = opt.get().value();
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-                    else
+                    if (target == null || target == emptyValue)
                     {
                         continue;
                     }

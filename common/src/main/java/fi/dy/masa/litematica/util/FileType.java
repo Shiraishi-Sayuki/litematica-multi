@@ -18,7 +18,7 @@ public enum FileType implements StringIdentifiable
 	SPONGE_SCHEMATIC,
 	VANILLA_STRUCTURE;
 
-	public static final StringIdentifiable.EnumCodec<FileType> CODEC = StringIdentifiable.createCodec(FileType::values);
+	public static final StringIdentifiable.Codec<FileType> CODEC = StringIdentifiable.createCodec(FileType::values);
 	public static final ImmutableList<FileType> VALUES = ImmutableList.copyOf(values());
 
 

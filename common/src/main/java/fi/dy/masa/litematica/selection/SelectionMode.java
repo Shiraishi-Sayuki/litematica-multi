@@ -14,7 +14,7 @@ public enum SelectionMode implements IConfigOptionListEntry, StringIdentifiable
     NORMAL  ("normal", "litematica.gui.label.area_selection.mode.normal"),
     SIMPLE  ("simple", "litematica.gui.label.area_selection.mode.simple");
 
-    public static final EnumCodec<SelectionMode> CODEC = StringIdentifiable.createCodec(SelectionMode::values);
+    public static final StringIdentifiable.Codec<SelectionMode> CODEC = StringIdentifiable.createCodec(SelectionMode::values);
     public static final ImmutableList<SelectionMode> VALUES = ImmutableList.copyOf(values());
 
     private final String configString;

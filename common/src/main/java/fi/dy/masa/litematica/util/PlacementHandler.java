@@ -58,7 +58,7 @@ public class PlacementHandler
             Properties.ATTACHMENT,
             Properties.AXIS,
             Properties.BLOCK_HALF,
-            Properties.BLOCK_FACE,
+            Properties.FACING,
             Properties.CHEST_TYPE,
             Properties.COMPARATOR_MODE,
             Properties.DOOR_HINGE,

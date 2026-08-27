@@ -1,15 +1,15 @@
 modLoader = "javafml"
-loaderVersion = "[4,)"
+loaderVersion = "[46,)"
 license = "LGPLv3"
 
 [[mods]]
 modId = "litematica"
-version = "${mod_version}"
+version = "${version}"
 displayName = "Litematica"
 displayURL = "https://github.com/maruohon/litematica"
 logoFile = "assets/litematica/icon.png"
 credits = "masa"
-authors = "masa, Shiraishi-Sayuki (multiloader port)"
+authors = "masa, Shiraishi Sayuki (multiloader port)"
 description = '''
 Client-side schematic viewer, editor and printer.
 '''
@@ -18,22 +18,22 @@ Client-side schematic viewer, editor and printer.
 config = "mixins.litematica.json"
 
 [[dependencies.litematica]]
-modId = "neoforge"
+modId = "forge"
 mandatory = true
-versionRange = "[21.0.0,)"
+versionRange = "[46,)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.litematica]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.21,1.22)"
+versionRange = "[1.20,1.21)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.litematica]]
 modId = "malilib"
 mandatory = true
-versionRange = "[0.21,)"
+versionRange = "[0.20.01,)"
 ordering = "AFTER"
 side = "CLIENT"

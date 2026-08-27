@@ -2,7 +2,9 @@ package fi.dy.masa.litematica.render.schematic;
 
 import javax.annotation.Nullable;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+
 import net.minecraft.util.math.ChunkPos;
+
 import fi.dy.masa.litematica.world.WorldSchematic;
 
 public class ChunkRenderDispatcherSchematic
@@ -14,7 +16,7 @@ public class ChunkRenderDispatcherSchematic
     protected int viewDistanceChunks;
     protected int viewDistanceBlocksSq;
 
-    protected ChunkRenderDispatcherSchematic(WorldSchematic world, int viewDistanceChunks,
+    public ChunkRenderDispatcherSchematic(WorldSchematic world, int viewDistanceChunks,
             WorldRendererSchematic worldRenderer, IChunkRendererFactory factory)
     {
         this.chunkRendererFactory = factory;
@@ -23,14 +25,15 @@ public class ChunkRenderDispatcherSchematic
         this.setViewDistanceChunks(viewDistanceChunks);
     }
 
-    protected void setViewDistanceChunks(int viewDistanceChunks)
+    public void setViewDistanceChunks(int viewDistanceChunks)
     {
         this.viewDistanceChunks = viewDistanceChunks;
         this.viewDistanceBlocksSq = (viewDistanceChunks + 2) << 4; // Add like one extra chunk of margin just in case
         this.viewDistanceBlocksSq *= this.viewDistanceBlocksSq;
+        this.chunkRenderers.clear();
     }
 
-    protected void delete()
+    public void delete()
     {
         for (ChunkRendererSchematicVbo chunkRenderer : this.chunkRenderers.values())
         {
@@ -40,30 +43,18 @@ public class ChunkRenderDispatcherSchematic
         this.chunkRenderers.clear();
     }
 
-    private boolean rendererOutOfRange(ChunkRendererSchematicVbo cr)
-    {
-        if (cr.getDistanceSq() > this.viewDistanceBlocksSq)
-        {
-            cr.deleteGlResources();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    protected void removeOutOfRangeRenderers()
+    public void removeOutOfRangeRenderers()
     {
         // Remove renderers that go out of view distance
-        this.chunkRenderers.values().removeIf(this::rendererOutOfRange);
+        this.chunkRenderers.values().removeIf(cr -> cr.getDistanceSq() > this.viewDistanceBlocksSq);
     }
 
-    protected void scheduleChunkRender(int chunkX, int chunkZ)
+    public void scheduleChunkRender(int chunkX, int chunkZ)
     {
         this.getOrCreateChunkRenderer(chunkX, chunkZ).setNeedsUpdate(false);
     }
 
-    protected int getRendererCount()
+    public int getRendererCount()
     {
         return this.chunkRenderers.size();
     }
@@ -86,6 +77,7 @@ public class ChunkRenderDispatcherSchematic
     @Nullable
     protected ChunkRendererSchematicVbo getChunkRenderer(int chunkX, int chunkZ)
     {
-        return this.getOrCreateChunkRenderer(chunkX, chunkZ);
+        long index = ChunkPos.toLong(chunkX, chunkZ);
+        return this.chunkRenderers.get(index);
     }
 }

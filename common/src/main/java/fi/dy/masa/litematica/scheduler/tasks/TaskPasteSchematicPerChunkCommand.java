@@ -13,14 +13,11 @@ import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.command.argument.BlockArgumentParser;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
@@ -360,7 +357,7 @@ public class TaskPasteSchematicPerChunkCommand extends TaskPasteSchematicPerChun
     protected void handleSummonItemFrame(ItemFrameEntity itemFrame, String baseSummonCmd, double x, double y, double z)
     {
         ItemStack stack = itemFrame.getHeldItemStack();
-        int facingId = itemFrame.getFacing().getId();
+        int facingId = itemFrame.getHorizontalFacing().getId();
         String facingTag = String.format("{Facing:%db}", facingId);
 
         if (stack.isEmpty())
@@ -369,7 +366,7 @@ public class TaskPasteSchematicPerChunkCommand extends TaskPasteSchematicPerChun
             return;
         }
 
-        NbtCompound itemNbt = (NbtCompound) ItemStack.CODEC.encodeStart(this.schematicWorld.getRegistryManager().getOps(NbtOps.INSTANCE), stack).getPartialOrThrow();
+        NbtCompound itemNbt = stack.writeNbt(new NbtCompound());
         String fullNbtStr = String.format("{Facing:%db,Item:%s}", facingId, itemNbt.toString());
         String fullCmd = baseSummonCmd + " " + fullNbtStr;
 
@@ -562,7 +559,7 @@ public class TaskPasteSchematicPerChunkCommand extends TaskPasteSchematicPerChun
 
             try
             {
-                Set<String> keys = new HashSet<>(be.createNbt(clientWorld.getRegistryManager()).getKeys());
+                Set<String> keys = new HashSet<>(be.createNbt().getKeys());
                 keys.remove("id");
                 keys.remove("x");
                 keys.remove("y");
@@ -607,7 +604,7 @@ public class TaskPasteSchematicPerChunkCommand extends TaskPasteSchematicPerChun
 
         if (be instanceof SignBlockEntity signBe)
         {
-            NbtCompound tag = be.createNbt(schematicWorld.getRegistryManager());
+            NbtCompound tag = be.createNbt();
 
             if (tag != null)
             {
@@ -767,7 +764,7 @@ public class TaskPasteSchematicPerChunkCommand extends TaskPasteSchematicPerChun
     protected BlockPos placeNbtPickedBlock(BlockPos pos, BlockState state, BlockEntity be,
                                            @Nonnull World schematicWorld, @Nonnull ClientWorld clientWorld)
     {
-        double reach = this.mc.player.getBlockInteractionRange();
+        double reach = this.mc.interactionManager.getReachDistance();
         BlockPos placementPos = this.findEmptyNearbyPosition(clientWorld, this.mc.player.getPos(), 4, reach);
 
         if (placementPos != null && preparePickedStack(pos, state, be, schematicWorld, this.mc, clientWorld.getRegistryManager()))
@@ -1219,7 +1216,7 @@ public class TaskPasteSchematicPerChunkCommand extends TaskPasteSchematicPerChun
         if (stack.isEmpty() == false)
         {
             // BlockUtils.setStackNbt(stack, be, registryManager);
-            be.setStackNbt(stack, registryManager);
+            be.setStackNbt(stack);
             mc.player.getInventory().offHand.set(0, stack);
             mc.interactionManager.clickCreativeStack(stack, 45);
             return true;

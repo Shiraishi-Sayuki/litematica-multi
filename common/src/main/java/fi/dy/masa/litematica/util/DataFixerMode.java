@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.util.StringIdentifiable;
 
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
-import fi.dy.masa.malilib.util.Schema;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.litematica.config.Configs;
 
@@ -23,7 +22,7 @@ public enum DataFixerMode implements IConfigOptionListEntry, StringIdentifiable
     BELOW_112X              ("below_112X", "litematica.gui.label.data_fixer_mode.below_112X"),
     NEVER                   ("never", "litematica.gui.label.data_fixer_mode.never");
 
-    public static final StringIdentifiable.EnumCodec<DataFixerMode> CODEC = StringIdentifiable.createCodec(DataFixerMode::values);
+    public static final StringIdentifiable.Codec<DataFixerMode> CODEC = StringIdentifiable.createCodec(DataFixerMode::values);
     public static final ImmutableList<DataFixerMode> VALUES = ImmutableList.copyOf(values());
 
     private final String configString;

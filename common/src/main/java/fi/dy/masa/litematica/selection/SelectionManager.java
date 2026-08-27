@@ -690,7 +690,7 @@ public class SelectionManager
 
         // If the selection had only one box with the exact same name as the area selection itself,
         // then also rename that box to the new name.
-        if (boxes.size() == 1 && boxes.getFirst().getName().equals(selection.getName()))
+        if (boxes.size() == 1 && boxes.get(0).getName().equals(selection.getName()))
         {
             selection.renameSubRegionBox(selection.getName(), newName);
         }

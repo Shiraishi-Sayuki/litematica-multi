@@ -1139,10 +1139,10 @@ public class SchematicPlacement
         compound.put("SubRegions", subs);
         compound.putString("ReplaceMode", Configs.Generic.PASTE_REPLACE_BEHAVIOR.getStringValue());
         compound.putString("PasteLayerBehavior", Configs.Generic.PASTE_LAYER_BEHAVIOR.getStringValue());
-        LayerRange.CODEC.encodeStart(NbtOps.INSTANCE, DataManager.getRenderLayerRange())
-                        .resultOrPartial()
-                        .ifPresent(range -> compound.put("RenderLayerRange", range));
         // 1.21.5+
+        // LayerRange.CODEC.encodeStart(NbtOps.INSTANCE, DataManager.getRenderLayerRange())
+        //                 .resultOrPartial()
+        //                 .ifPresent(range -> compound.put("RenderLayerRange", range));
         // compound.put("RenderLayerRange", LayerRange.CODEC, DataManager.getRenderLayerRange());
 
         ((SchematicPlacementEventHandler) SchematicPlacementEventHandler.getInstance()).onSavePlacementToNbt(this, compound);

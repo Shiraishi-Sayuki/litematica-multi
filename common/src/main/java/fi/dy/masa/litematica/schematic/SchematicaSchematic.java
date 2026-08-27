@@ -25,7 +25,6 @@ import net.minecraft.world.chunk.WorldChunk;
 
 import fi.dy.masa.malilib.gui.Message.MessageType;
 import fi.dy.masa.malilib.util.InfoUtils;
-import fi.dy.masa.malilib.util.Schema;
 import fi.dy.masa.malilib.util.data.Constants;
 import fi.dy.masa.malilib.util.nbt.NbtUtils;
 import fi.dy.masa.litematica.Litematica;
@@ -39,6 +38,7 @@ import fi.dy.masa.litematica.util.DataFixerMode;
 import fi.dy.masa.litematica.util.EntityUtils;
 import fi.dy.masa.litematica.util.FileType;
 import fi.dy.masa.litematica.util.PositionUtils;
+import fi.dy.masa.litematica.util.Schema;
 
 public class SchematicaSchematic
 {
@@ -149,7 +149,7 @@ public class SchematicaSchematic
 
                                 try
                                 {
-                                    te.read(teNBT, world.getRegistryManager());
+                                    te.readNbt(teNBT);
                                 }
                                 catch (Exception e)
                                 {
@@ -282,7 +282,7 @@ public class SchematicaSchematic
 
                                         try
                                         {
-                                            te.read(teNBT, world.getRegistryManager());
+                                            te.readNbt(teNBT);
                                         }
                                         catch (Exception e)
                                         {
@@ -383,7 +383,7 @@ public class SchematicaSchematic
                     {
                         try
                         {
-                            NbtCompound nbt = te.createNbtWithId(world.getRegistryManager());
+                            NbtCompound nbt = te.createNbtWithId();
                             BlockPos pos = new BlockPos(relX, relY, relZ);
                             NbtUtils.writeBlockPosToTag(pos, nbt);
 

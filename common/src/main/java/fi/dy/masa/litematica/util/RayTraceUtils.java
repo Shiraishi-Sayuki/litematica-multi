@@ -572,7 +572,7 @@ public class RayTraceUtils
     @Nonnull
     public static HitResult getRayTraceFromEntity(World worldIn, Entity entityIn, boolean useLiquids)
     {
-        double reach = MinecraftClient.getInstance().player != null ? MinecraftClient.getInstance().player.getEntityInteractionRange() + 0.5d : 5.0d;
+        double reach = 4.5d + 0.5d;
         return getRayTraceFromEntity(worldIn, entityIn, useLiquids, reach);
     }
 
@@ -1149,7 +1149,7 @@ public class RayTraceUtils
         // probably be annoying if you want to pick block the client world block.
         if (furthestTrace == null)
         {
-            BlockPos pos = closestVanillaPos.offset(entityTrace.getEntity().getFacing());
+            BlockPos pos = closestVanillaPos.offset(entityTrace.getEntity().getHorizontalFacing());
             LayerRange layerRange = DataManager.getRenderLayerRange();
 
             if (layerRange.isPositionWithinRange(pos) &&
@@ -1168,7 +1168,7 @@ public class RayTraceUtils
 
             if (adjacentOnly)
             {
-                BlockPos placementPos = vanillaPosReplaceable ? closestVanillaPos : closestVanillaPos.offset(entityTrace.getEntity().getFacing());
+                BlockPos placementPos = vanillaPosReplaceable ? closestVanillaPos : closestVanillaPos.offset(entityTrace.getEntity().getHorizontalFacing());
 
                 if (pos.equals(placementPos) == false)
                 {

@@ -5,7 +5,8 @@
 	"version": "${mod_version}",
 	"description": "A modern schematic mod for LiteLoader, Rift, Fabric etc.",
 	"authors": [
-		"masa"
+		"masa",
+		"Shiraishi Sayuki (multiloader port)"
 	],
 	"contributors": [
 		"Sakura-Ryoko"
@@ -33,7 +34,7 @@
 	],
 	"accessWidener": "litematica.accesswidener",
 	"depends": {
-		"minecraft": ">=1.21 <=1.21.1",
-		"malilib": ">=0.21.10-"
+		"minecraft": "1.20.x",
+		"malilib": "*"
 	}
 }

@@ -12,7 +12,7 @@ public enum PasteLayerBehavior implements IConfigOptionListEntry, StringIdentifi
     ALL             ("all",             "litematica.gui.label.paste_layer_behavior.all"),
     RENDERED_ONLY   ("rendered_only",   "litematica.gui.label.paste_layer_behavior.rendered_only");
 
-    public static final EnumCodec<PasteLayerBehavior> CODEC = StringIdentifiable.createCodec(PasteLayerBehavior::values);
+    public static final StringIdentifiable.Codec<PasteLayerBehavior> CODEC = StringIdentifiable.createCodec(PasteLayerBehavior::values);
     public static final ImmutableList<PasteLayerBehavior> VALUES = ImmutableList.copyOf(values());
     private final String configString;
     private final String translationKey;

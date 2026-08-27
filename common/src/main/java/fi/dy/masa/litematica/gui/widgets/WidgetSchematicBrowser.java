@@ -18,7 +18,6 @@ import net.minecraft.util.math.Vec3i;
 import fi.dy.masa.malilib.gui.interfaces.ISelectionListener;
 import fi.dy.masa.malilib.gui.widgets.WidgetFileBrowserBase;
 import fi.dy.masa.malilib.render.RenderUtils;
-import fi.dy.masa.malilib.util.Schema;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.litematica.Litematica;
 import fi.dy.masa.litematica.Reference;
@@ -28,6 +27,7 @@ import fi.dy.masa.litematica.gui.Icons;
 import fi.dy.masa.litematica.schematic.LitematicaSchematic;
 import fi.dy.masa.litematica.schematic.SchematicMetadata;
 import fi.dy.masa.litematica.schematic.SchematicSchema;
+import fi.dy.masa.litematica.util.Schema;
 
 public class WidgetSchematicBrowser extends WidgetFileBrowserBase
 {

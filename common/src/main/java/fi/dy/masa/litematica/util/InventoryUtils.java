@@ -15,14 +15,20 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -212,9 +218,9 @@ public class InventoryUtils
 	{
 		PlayerEntity player = mc.player;
 		if (mc.player == null) return -1;
-		boolean isCreative = player.isInCreativeMode();
+		boolean isCreative = player.isCreative();
 
-		if (fi.dy.masa.malilib.util.InventoryUtils.areStacksEqualIgnoreNbt(stackReference, player.getMainHandStack()))
+		if (fi.dy.masa.malilib.util.InventoryUtils.areStacksEqual(stackReference, player.getMainHandStack()))
 		{
 			return -1;
 		}
@@ -251,7 +257,7 @@ public class InventoryUtils
                 // Otherwise it would try to write whatever that TE is into the picked ItemStack.
                 if (GuiBase.isCtrlDown() && te != null && mc.world.isAir(pos))
                 {
-                    te.setStackNbt(stack, schematicWorld.getRegistryManager());
+                    te.setStackNbt(stack);
                     //stack.set(DataComponentTypes.LORE, new LoreComponent(ImmutableList.of(Text.of("(+NBT)"))));
                 }
 
@@ -371,9 +377,48 @@ public class InventoryUtils
 
     public static boolean doesBundleContainItem(ItemStack stack, ItemStack referenceItem)
     {
-        DefaultedList<ItemStack> items = fi.dy.masa.malilib.util.InventoryUtils.getBundleItems(stack);
+        DefaultedList<ItemStack> items = getBundleItems(stack);
 
         return doesListContainItem(items, referenceItem);
+    }
+
+    public static DefaultedList<ItemStack> getBundleItems(ItemStack stack)
+    {
+        DefaultedList<ItemStack> items = DefaultedList.ofSize(0, ItemStack.EMPTY);
+
+        if (stack != null && stack.getItem() == Items.BUNDLE && stack.hasNbt())
+        {
+            NbtList list = stack.getNbt().getList("Items", NbtElement.COMPOUND_TYPE);
+
+            for (int i = 0; i < list.size(); ++i)
+            {
+                items.add(ItemStack.fromNbt(list.getCompound(i)));
+            }
+        }
+
+        return items;
+    }
+
+    public static boolean bundleHasItems(ItemStack stack)
+    {
+        return getBundleItems(stack).isEmpty() == false;
+    }
+
+    public static ItemStack getItemStackFromString(String id)
+    {
+        return getItemStackFromString(id, null);
+    }
+
+    public static ItemStack getItemStackFromString(String id, @Nullable DynamicRegistryManager registryManager)
+    {
+        Identifier identifier = Identifier.tryParse(id);
+
+        if (identifier != null && Registries.ITEM.containsId(identifier))
+        {
+            return new ItemStack(Registries.ITEM.get(identifier));
+        }
+
+        return null;
     }
 
     private static boolean doesListContainItem(DefaultedList<ItemStack> items, ItemStack referenceItem)
@@ -382,7 +427,7 @@ public class InventoryUtils
         {
             for (ItemStack item : items)
             {
-                if (fi.dy.masa.malilib.util.InventoryUtils.areStacksEqualIgnoreNbt(item, referenceItem))
+                if (fi.dy.masa.malilib.util.InventoryUtils.areStacksEqual(item, referenceItem))
                 {
                     return true;
                 }
@@ -435,7 +480,7 @@ public class InventoryUtils
 
                 if (be != null)
                 {
-                    nbt = be.createNbtWithIdentifyingData(world.getRegistryManager());
+nbt = be.createNbtWithIdentifyingData();
                 }
             }
             else
@@ -483,7 +528,7 @@ public class InventoryUtils
         {
             if (nbt.isEmpty())
             {
-                nbt = be.createNbtWithIdentifyingData(world.getRegistryManager());
+                nbt = be.createNbtWithIdentifyingData();
             }
             inv = fi.dy.masa.malilib.util.InventoryUtils.getInventory(world, pos);
         }

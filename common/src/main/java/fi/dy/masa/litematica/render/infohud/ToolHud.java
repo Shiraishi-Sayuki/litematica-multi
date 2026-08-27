@@ -3,9 +3,6 @@ package fi.dy.masa.litematica.render.infohud;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-
-import fi.dy.masa.litematica.data.EntitiesDataStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
@@ -24,12 +21,11 @@ import fi.dy.masa.litematica.selection.SelectionMode;
 import fi.dy.masa.litematica.tool.ToolMode;
 import fi.dy.masa.litematica.tool.ToolModeData;
 import fi.dy.masa.litematica.util.EntityUtils;
-import fi.dy.masa.litematica.util.PasteLayerBehavior;
 import fi.dy.masa.litematica.util.PositionUtils;
 import fi.dy.masa.litematica.util.ReplaceBehavior;
 import fi.dy.masa.malilib.config.HudAlignment;
 import fi.dy.masa.malilib.gui.GuiBase;
-import fi.dy.masa.malilib.util.game.BlockUtils;
+import fi.dy.masa.malilib.util.BlockUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 
 public class ToolHud extends InfoHud
@@ -145,7 +141,6 @@ public class ToolHud extends InfoHud
         String orange = GuiBase.TXT_GOLD;
         String red = GuiBase.TXT_RED;
         String white = GuiBase.TXT_WHITE;
-        String aqua = GuiBase.TXT_AQUA;
         String strYes = green + StringUtils.translate("litematica.label.yes") + rst;
         String strNo = GuiBase.TXT_RED + StringUtils.translate("litematica.label.no") + rst;
 
@@ -259,7 +254,7 @@ public class ToolHud extends InfoHud
                 lines.add(StringUtils.translate("litematica.hud.area_selection.origin", green + str + rst));
 
                 BlockState state = mode.getPrimaryBlock();
-                ItemStack stack = this.mc.player != null ? this.mc.player.getMainHandStack() : ItemStack.EMPTY;
+                ItemStack stack = this.mc.player.getMainHandStack();
 
                 if (state != null && mode == ToolMode.REBUILD &&
                     (stack.isEmpty() || EntityUtils.hasToolItemInHand(this.mc.player, Hand.MAIN_HAND)))
@@ -300,33 +295,11 @@ public class ToolHud extends InfoHud
 
                     lines.add(StringUtils.translate("litematica.hud.misc.schematic_paste.replace_mode", str));
 
-                    PasteLayerBehavior layers = (PasteLayerBehavior) Configs.Generic.PASTE_LAYER_BEHAVIOR.getOptionListValue();
-                    str = layers.getDisplayName();
-
-                    if (layers == PasteLayerBehavior.ALL)
-                    {
-                        str = green + str + rst;
-                    }
-                    else
-                    {
-                        str = aqua + str + rst;
-                    }
-
-                    lines.add(StringUtils.translate("litematica.hud.misc.schematic_paste.layer_mode", str));
-
                     str = Configs.Generic.PASTE_NBT_BEHAVIOR.getOptionListValue().getDisplayName();
-
-                    if (EntitiesDataStorage.getInstance().hasServuxServer()
-                        && Configs.Generic.PASTE_USING_SERVUX.getBooleanValue()
-                        && !Configs.Generic.PASTE_USING_COMMANDS_IN_SP.getBooleanValue())
-                    {
-                        str = orange + "Servux" + rst;
-                    }
-
                     lines.add(StringUtils.translate("litematica.hud.misc.schematic_paste.data_restore_mode", str));
 
                     String strVal = Configs.Generic.PASTE_IGNORE_INVENTORY.getBooleanValue() ? strYes : strNo;
-                    lines.add(StringUtils.translate("litematica.hud.misc.schematic_paste.ignore_inventory_contents", strVal));
+                    lines.add(String.format("Ignore inventory contents: %s", strVal));
                 }
             }
             else
@@ -360,12 +333,12 @@ public class ToolHud extends InfoHud
         String rst = GuiBase.TXT_RST;
 
         strBlock = green + state.getBlock().getName().getString() + rst;
-        Optional<Direction> facing = BlockUtils.getFirstPropertyFacingValue(state);
+        Direction facing = BlockUtils.getFirstPropertyFacingValue(state);
 
-        if (facing.isPresent())
+        if (facing != null)
         {
             String gold = GuiBase.TXT_GOLD;
-            String strFacing = gold + facing.get().name().toLowerCase() + rst;
+            String strFacing = gold + facing.getName().toLowerCase() + rst;
             strBlock += " - " + StringUtils.translate("litematica.tool_hud.facing", strFacing);
         }
 

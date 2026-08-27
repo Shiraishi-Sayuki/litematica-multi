@@ -81,7 +81,7 @@ public class WorldUtils
 
     public static double getValidBlockRange(MinecraftClient mc)
     {
-        return Configs.Generic.EASY_PLACE_VANILLA_REACH.getBooleanValue() ? mc.player.getBlockInteractionRange() : mc.player.getBlockInteractionRange() + 1.0;
+        return Configs.Generic.EASY_PLACE_VANILLA_REACH.getBooleanValue() ? mc.interactionManager.getReachDistance() : mc.interactionManager.getReachDistance() + 1.0;
     }
 
     public static boolean shouldPreventBlockUpdates(World world)
@@ -924,7 +924,7 @@ public class WorldUtils
         final World world = MinecraftClient.getInstance().world;
 
         //Wall-mountable blocks
-        if (stateBlock instanceof AbstractTorchBlock ||
+        if (stateBlock instanceof TorchBlock ||
             stateBlock instanceof AbstractBannerBlock ||
             stateBlock instanceof AbstractSignBlock ||
             stateBlock instanceof AbstractSkullBlock)
@@ -1326,7 +1326,7 @@ public class WorldUtils
                 Properties.VERTICAL_DIRECTION,
                 Properties.ROTATION, //banners
                 Properties.HANGING, //lanterns
-                Properties.BLOCK_FACE, //lever, button, grindstone
+                Properties.FACING, //lever, button, grindstone
                 Properties.ATTACHMENT, //bell (double-check for single-wall / double-wall)
                 //Properties.HORIZONTAL_AXIS, //Nether portals, though they aren't directly placeable
                 //Properties.ORIENTATION, //jigsaw blocks, Crafters

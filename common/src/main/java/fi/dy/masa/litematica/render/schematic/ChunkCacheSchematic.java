@@ -1,6 +1,5 @@
 package fi.dy.masa.litematica.render.schematic;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockState;
@@ -12,6 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.ColorResolver;
 import net.minecraft.world.chunk.Chunk;
@@ -20,21 +20,24 @@ import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.world.chunk.light.LightSourceView;
 import net.minecraft.world.chunk.light.LightingProvider;
 
+import fi.dy.masa.litematica.world.FakeLightingProvider;
+
 public class ChunkCacheSchematic implements BlockRenderView, ChunkProvider
 {
     private static final BlockState AIR = Blocks.AIR.getDefaultState();
 
     protected final World world;
     protected final ClientWorld worldClient;
+    protected final FakeLightingProvider lightingProvider;
     protected int chunkStartX;
     protected int chunkStartZ;
     protected WorldChunk[][] chunkArray;
     protected boolean empty;
 
-    public ChunkCacheSchematic(@Nonnull World worldIn, @Nonnull ClientWorld clientWorld, @Nonnull BlockPos pos, int expand)
+    public ChunkCacheSchematic(World worldIn, ClientWorld clientWorld, BlockPos pos, int expand)
     {
         this.world = worldIn;
-        //this.lightingProvider = new FakeLightingProvider(this);
+        this.lightingProvider = new FakeLightingProvider(this);
 
         this.worldClient = clientWorld;
         int chunkX = pos.getX() >> 4;
@@ -71,8 +74,7 @@ public class ChunkCacheSchematic implements BlockRenderView, ChunkProvider
     @Override
     public LightSourceView getChunk(int chunkX, int chunkZ)
     {
-        //return null; // TODO 1.17 this shouldn't be needed since the lighting provider does nothing
-        return this.worldClient.getChunk(chunkX, chunkZ);
+        return null; // TODO 1.17 this shouldn't be needed since the lighting provider does nothing
     }
 
     public boolean isEmpty()
@@ -117,6 +119,12 @@ public class ChunkCacheSchematic implements BlockRenderView, ChunkProvider
     }
 
     @Override
+    public int getLightLevel(LightType var1, BlockPos var2)
+    {
+        return 15;
+    }
+
+    @Override
     public FluidState getFluidState(BlockPos pos)
     {
         // TODO change when fluids become separate
@@ -126,8 +134,7 @@ public class ChunkCacheSchematic implements BlockRenderView, ChunkProvider
     @Override
     public LightingProvider getLightingProvider()
     {
-        //return this.lightingProvider;
-        return this.world.getLightingProvider();
+        return this.lightingProvider;
     }
 
     @Override

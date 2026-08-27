@@ -1,83 +1,48 @@
 package fi.dy.masa.litematica.render.schematic;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BuiltBuffer;
 import net.minecraft.client.render.RenderLayer;
+import fi.dy.masa.litematica.render.schematic.ChunkRendererSchematicVbo.OverlayRenderType;
 
-public class BufferBuilderCache implements AutoCloseable
+public class BufferBuilderCache
 {
-    private final ConcurrentHashMap<RenderLayer, BufferBuilder> blockBufferBuilders;
-    private final ConcurrentHashMap<OverlayRenderType, BufferBuilder> overlayBufferBuilders;
+    private final Map<RenderLayer, OmegaHackfixForCrashJustTemporarilyForNowISwearBecauseOfShittyBrokenCodeBufferBuilder> blockBufferBuilders = new HashMap<>();
+    private final OmegaHackfixForCrashJustTemporarilyForNowISwearBecauseOfShittyBrokenCodeBufferBuilder[] overlayBufferBuilders;
 
-    protected BufferBuilderCache()
+    public BufferBuilderCache()
     {
-		this.blockBufferBuilders = new ConcurrentHashMap<>();
-		this.overlayBufferBuilders = new ConcurrentHashMap<>();
-    }
-
-    protected boolean hasBufferByLayer(RenderLayer layer)
-    {
-        return this.blockBufferBuilders.containsKey(layer);
-    }
-
-    protected boolean hasBufferByOverlay(OverlayRenderType type)
-    {
-        return this.overlayBufferBuilders.containsKey(type);
-    }
-
-    protected BufferBuilder getBufferByLayer(RenderLayer layer, @Nonnull BufferAllocatorCache allocators)
-    {
-        synchronized (this.blockBufferBuilders)
+        for (RenderLayer layer : RenderLayer.getBlockLayers())
         {
-            return this.blockBufferBuilders.computeIfAbsent(layer, (key) -> new BufferBuilder(allocators.getBufferByLayer(key), key.getDrawMode(), key.getVertexFormat()));
+            this.blockBufferBuilders.put(layer, new OmegaHackfixForCrashJustTemporarilyForNowISwearBecauseOfShittyBrokenCodeBufferBuilder(layer.getExpectedBufferSize()));
+        }
+
+        this.overlayBufferBuilders = new OmegaHackfixForCrashJustTemporarilyForNowISwearBecauseOfShittyBrokenCodeBufferBuilder[OverlayRenderType.values().length];
+
+        for (int i = 0; i < this.overlayBufferBuilders.length; ++i)
+        {
+            this.overlayBufferBuilders[i] = new OmegaHackfixForCrashJustTemporarilyForNowISwearBecauseOfShittyBrokenCodeBufferBuilder(262144);
         }
     }
 
-    protected BufferBuilder getBufferByOverlay(OverlayRenderType type, @Nonnull BufferAllocatorCache allocators)
+    public OmegaHackfixForCrashJustTemporarilyForNowISwearBecauseOfShittyBrokenCodeBufferBuilder getBlockBufferByLayer(RenderLayer layer)
     {
-        synchronized (this.overlayBufferBuilders)
-        {
-            return this.overlayBufferBuilders.computeIfAbsent(type, (key) -> new BufferBuilder(allocators.getBufferByOverlay(key), key.getDrawMode(), key.getVertexFormat()));
-        }
+        return this.blockBufferBuilders.get(layer);
     }
 
-    protected void clearAll()
+    public OmegaHackfixForCrashJustTemporarilyForNowISwearBecauseOfShittyBrokenCodeBufferBuilder getOverlayBuffer(OverlayRenderType type)
     {
-        ArrayList<BufferBuilder> buffers;
-
-        synchronized (this.blockBufferBuilders)
-        {
-            buffers = new ArrayList<>(this.blockBufferBuilders.values());
-            this.blockBufferBuilders.clear();
-        }
-        synchronized (this.overlayBufferBuilders)
-        {
-            buffers.addAll(this.overlayBufferBuilders.values());
-            this.overlayBufferBuilders.clear();
-        }
-        for (BufferBuilder buffer : buffers)
-        {
-            if (!buffer.building)       // Converted to AW for 1.21.4 and below.
-			{
-                continue;
-			}
-			
-            BuiltBuffer built = buffer.endNullable();
-			
-            if (built != null)
-            {
-                built.close();
-            }
-        }
+        return this.overlayBufferBuilders[type.ordinal()];
     }
 
-    @Override
-    public void close() throws Exception
+    public void clear()
     {
-        this.clearAll();
+        this.blockBufferBuilders.values().forEach(BufferBuilder::reset);
+
+        for (BufferBuilder buffer : this.overlayBufferBuilders)
+        {
+            buffer.reset();
+        }
     }
 }

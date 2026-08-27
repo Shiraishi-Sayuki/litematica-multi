@@ -11,9 +11,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.BundleItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Vec3i;
 
@@ -173,7 +173,7 @@ public class MaterialListUtils
 
                     boxCounts.clear();
                 }
-                else if (item instanceof BundleItem && InventoryUtils.bundleHasItems(stack))
+                else if (item == Items.BUNDLE && fi.dy.masa.litematica.util.InventoryUtils.bundleHasItems(stack))
                 {
                     Object2IntOpenHashMap<ItemType> bundleCounts = getBundleItemCounts(stack);
 
@@ -213,7 +213,7 @@ public class MaterialListUtils
     public static Object2IntOpenHashMap<ItemType> getBundleItemCounts(ItemStack stackBundle)
     {
         Object2IntOpenHashMap<ItemType> map = new Object2IntOpenHashMap<>();
-        DefaultedList<ItemStack> items = InventoryUtils.getBundleItems(stackBundle);
+        DefaultedList<ItemStack> items = fi.dy.masa.litematica.util.InventoryUtils.getBundleItems(stackBundle);
 
         for (ItemStack bundleStack : items)
         {

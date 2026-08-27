@@ -190,7 +190,7 @@ public class EasyPlaceUtils
             {
                 return null;
             }
-            double reach = mc.player.getBlockInteractionRange();
+            double reach = mc.interactionManager.getReachDistance();
             Entity entity = mc.getCameraEntity();
             BlockHitResult trace = RayTraceUtils.traceToPositions(Collections.singletonList(overriddenPos), entity, reach);
             BlockPos pos = overriddenPos;
@@ -228,7 +228,7 @@ public class EasyPlaceUtils
         {
             return null;
         }
-        double reach = mc.player.getBlockInteractionRange();
+        double reach = mc.interactionManager.getReachDistance();
         Entity entity = mc.getCameraEntity();
 
         if (entity == null || world == null)
@@ -425,7 +425,7 @@ public class EasyPlaceUtils
         MinecraftClient mc = MinecraftClient.getInstance();
         Entity entity = mc.getCameraEntity();
         ClientWorld world = mc.world;
-        double reach = mc.player.getBlockInteractionRange();
+        double reach = mc.interactionManager.getReachDistance();
         RayTraceUtils.RayTraceWrapper traceWrapper = RayTraceUtils.getGenericTrace(world, entity, reach, true, true, true);
         BlockHitResult targetPosition = getTargetPosition(traceWrapper);
 
@@ -446,7 +446,7 @@ public class EasyPlaceUtils
         BlockState stateClient = world.getBlockState(targetBlockPos);
         ItemStack requiredStack = MaterialCache.getInstance().getRequiredBuildItemForState(stateSchematic);
 
-        if (stateSchematic.isIn(BlockTags.AIR))
+        if (stateSchematic.isAir())
         {
             return ActionResult.FAIL;
         }
@@ -743,7 +743,7 @@ public class EasyPlaceUtils
             return false;
         }
 
-        double reach = mc.player.getBlockInteractionRange();
+        double reach = mc.interactionManager.getReachDistance();
         HitResult trace = fi.dy.masa.malilib.util.game.RayTraceUtils.getRayTraceFromEntity(world, entity, RaycastContext.FluidHandling.NONE, false, reach);
 
         if (trace.getType() == HitResult.Type.BLOCK)

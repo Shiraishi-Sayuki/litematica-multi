@@ -30,7 +30,7 @@ public class ItemUtils
             check.setDamage(0);
         }
 
-        return ItemStack.areItemsAndComponentsEqual(ref, check);
+        return ItemStack.areEqual(ref, check);
     }
 
     public static ItemStack getItemForState(BlockState state)
@@ -115,7 +115,7 @@ public class ItemUtils
 
             return String.format("[%s - display: %s - NBT: %s] (%s)",
                                  rl != null ? rl.toString() : "null", stack.getName().getString(),
-                                 stack.getComponents() != null ? stack.getComponents().toString() : "<no NBT>", stack);
+                                 stack.getNbt() != null ? stack.getNbt().toString() : "<no NBT>", stack);
         }
 
         return "<empty>";

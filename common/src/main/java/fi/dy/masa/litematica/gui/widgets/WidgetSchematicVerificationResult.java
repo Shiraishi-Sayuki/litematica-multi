@@ -16,7 +16,7 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.util.BufferAllocator;
+import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
@@ -582,7 +582,7 @@ public class WidgetSchematicVerificationResult extends WidgetListEntrySortable<B
         {
             //Tessellator tessellator = Tessellator.getInstance();
             //BufferBuilder buffer = tessellator.getBuffer();
-            VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(new BufferAllocator(RenderLayer.DEFAULT_BUFFER_SIZE));
+            VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(new BufferBuilder(RenderLayer.DEFAULT_BUFFER_SIZE));
             VertexConsumer vertexConsumer = immediate.getBuffer(RenderLayer.getTranslucent());
             MatrixStack.Entry matrixEntry = matrixStack.peek();
 
@@ -619,7 +619,7 @@ public class WidgetSchematicVerificationResult extends WidgetListEntrySortable<B
     private static void renderQuad(BakedQuad quad, float[] brightness, int[] light,
                                    MatrixStack.Entry matrixEntry, VertexConsumer vertexConsumer)
     {
-        vertexConsumer.quad(matrixEntry, quad, brightness, 1.0f, 1.0f, 1.0f, 1.0f, light, OverlayTexture.DEFAULT_UV, true);
+        vertexConsumer.quad(matrixEntry, quad, brightness, 1.0f, 1.0f, 1.0f, light, OverlayTexture.DEFAULT_UV, true);
     }
 
     private static class ButtonListener implements IButtonActionListener

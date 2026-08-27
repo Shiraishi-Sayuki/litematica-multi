@@ -71,7 +71,7 @@ public class PickBlockUtils
         // No overrides by other mods
         if (pos == null)
         {
-            double reach = mc.player.getBlockInteractionRange();
+            double reach = mc.interactionManager.getReachDistance();
             Entity entity = mc.getCameraEntity();
             pos = RayTraceUtils.getPickBlockLastTrace(world, entity, reach, true);
         }
@@ -122,7 +122,7 @@ public class PickBlockUtils
                     {
                         stack = stack.copy();
                         //ItemUtils.storeBlockEntityInStack(stack, te);
-                        te.setStackNbt(stack, clientWorld.getRegistryManager());
+                        te.setStackNbt(stack);
                     }
                 }
 

@@ -13,7 +13,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.DimensionEffects;
-import net.minecraft.component.type.MapIdComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -49,7 +48,6 @@ import net.minecraft.world.entity.EntityLookup;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.tick.EmptyTickSchedulers;
 import net.minecraft.world.tick.QueryableTickScheduler;
-import net.minecraft.world.tick.TickManager;
 
 import fi.dy.masa.litematica.Reference;
 import fi.dy.masa.litematica.render.schematic.WorldRendererSchematic;
@@ -83,7 +81,6 @@ public class WorldSchematic extends World
     @Nullable protected final WorldRendererSchematic worldRenderer;
     protected int nextEntityId;
     protected int entityCount;
-    private final TickManager tickManager;
     private final RegistryEntry<DimensionType> dimensionType;
     private DimensionEffects dimensionEffects = new DimensionEffects.Overworld();
 
@@ -111,7 +108,6 @@ public class WorldSchematic extends World
         {
             this.setDimension(this.mc.world.getRegistryManager());
         }
-        this.tickManager = new TickManager();
     }
 
     @Override
@@ -155,22 +151,15 @@ public class WorldSchematic extends World
     }
 
     @Override
-    public TickManager getTickManager()
+    public MapState getMapState(String id) { return null; }
+
+    @Override
+    public void putMapState(String id, MapState state) { }
+
+    @Override
+    public int getNextMapId()
     {
-        return this.tickManager;
-    }
-
-    @Nullable
-    @Override
-    public MapState getMapState(MapIdComponent id) { return null; }
-
-    @Override
-    public void putMapState(MapIdComponent id, MapState state) { }
-
-    @Override
-    public MapIdComponent increaseAndGetMapId()
-    {
-        return null;
+        return 0;
     }
 
     @Override
@@ -529,7 +518,7 @@ public class WorldSchematic extends World
     }
 
     @Override
-    public void emitGameEvent(RegistryEntry<GameEvent> event, Vec3d emitterPos, GameEvent.Emitter emitter)
+    public void emitGameEvent(GameEvent event, Vec3d pos, @Nullable GameEvent.Emitter emitter)
     {
         // NO-OP
     }
@@ -626,19 +615,6 @@ public class WorldSchematic extends World
         }
     }
 
-    @Override
-    public BrewingRecipeRegistry getBrewingRecipeRegistry()
-    {
-        if (this.mc != null && this.mc.world != null)
-        {
-            return this.mc.world.getBrewingRecipeRegistry();
-        }
-        else
-        {
-            return BrewingRecipeRegistry.EMPTY;
-        }
-    }
-
     // TODO 1.21.2+
     /*
     @Override
@@ -686,19 +662,19 @@ public class WorldSchematic extends World
     }
 
     @Override
-    public void emitGameEvent(@Nullable Entity entity, RegistryEntry<GameEvent> event, Vec3d pos)
+    public void emitGameEvent(@Nullable Entity entity, GameEvent event, Vec3d pos)
     {
         // NO-OP
     }
 
     @Override
-    public void emitGameEvent(@Nullable Entity entity, RegistryEntry<GameEvent> event, BlockPos pos)
+    public void emitGameEvent(@Nullable Entity entity, GameEvent event, BlockPos pos)
     {
         // NO-OP
     }
 
     @Override
-    public void emitGameEvent(RegistryKey<GameEvent> event, BlockPos pos, @Nullable GameEvent.Emitter emitter)
+    public void emitGameEvent(GameEvent event, BlockPos pos, @Nullable GameEvent.Emitter emitter)
     {
         // NO-OP
     }

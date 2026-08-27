@@ -11,9 +11,9 @@ import org.jetbrains.annotations.ApiStatus;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.Leashable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.LeashKnotEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -66,7 +66,7 @@ public class EntityUtils
 
             if (toolItem != null)
             {
-                return InventoryUtils.areStacksAndNbtEqual(toolItem, stackHand);
+                return InventoryUtils.areStacksEqual(toolItem, stackHand);
             }
 
             return false;
@@ -82,7 +82,7 @@ public class EntityUtils
 
         ItemStack stackHand = entity.getStackInHand(hand);
 
-        return InventoryUtils.areStacksEqualIgnoreNbt(toolItem, stackHand);
+        return ItemStack.areItemsEqual(toolItem, stackHand);
     }
 
     /**
@@ -97,12 +97,12 @@ public class EntityUtils
     {
         Hand hand = null;
 
-        if (InventoryUtils.areStacksEqualIgnoreNbt(player.getMainHandStack(), stack))
+        if (ItemStack.areItemsEqual(player.getMainHandStack(), stack))
         {
             hand = Hand.MAIN_HAND;
         }
         else if (player.getMainHandStack().isEmpty() &&
-                InventoryUtils.areStacksEqualIgnoreNbt(player.getOffHandStack(), stack))
+                ItemStack.areItemsEqual(player.getOffHandStack(), stack))
         {
             hand = Hand.OFF_HAND;
         }
@@ -320,7 +320,7 @@ public class EntityUtils
         {
             for (Entity passenger : entity.getPassengerList())
             {
-                Vec3d adjPos = entity.getPassengerRidingPos(passenger);
+                Vec3d adjPos = entity.getPos();
 
                 passenger.refreshPositionAndAngles(
                         adjPos.getX(),
@@ -399,7 +399,7 @@ public class EntityUtils
 
         if (nbt.contains("CustomName", NbtElement.STRING_TYPE)) {
             String string = nbt.getString("CustomName");
-            entity.setCustomName(Text.Serialization.fromJson(string, entity.getRegistryManager()));
+            entity.setCustomName(Text.Serializer.fromJson(string));
         }
 
         entity.setCustomNameVisible(nbt.getBoolean("CustomNameVisible"));
@@ -417,7 +417,7 @@ public class EntityUtils
             }
         }
 
-        if (entity instanceof Leashable)
+        if (entity instanceof MobEntity)
         {
             readLeashableEntityCustomData(entity, nbt);
         }
@@ -432,17 +432,21 @@ public class EntityUtils
     {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.world == null) return;
-        assert entity instanceof Leashable;
-        Leashable leashable = (Leashable) entity;
         ((IMixinEntity) entity).litematica_readCustomDataFromNbt(nbt);
-        if (leashable.getLeashData() != null && leashable.getLeashData().unresolvedLeashData != null)
+        if (entity instanceof MobEntity && nbt.contains("Leash", NbtElement.COMPOUND_TYPE))
         {
-            leashable.getLeashData().unresolvedLeashData
-                    .ifLeft(uuid ->
-                            // We MUST use client-side world here.
-                            leashable.attachLeash(((IMixinWorld) mc.world).litematica_getEntityLookup().get(uuid), false))
-                    .ifRight(pos ->
-                            leashable.attachLeash(LeashKnotEntity.getOrCreate(mc.world, pos), false));
+            NbtCompound leashNbt = nbt.getCompound("Leash");
+            MobEntity mob = (MobEntity) entity;
+
+            if (leashNbt.containsUuid("UUID"))
+            {
+                mob.attachLeash(((IMixinWorld) mc.world).litematica_getEntityLookup().get(leashNbt.getUuid("UUID")), false);
+            }
+            else if (leashNbt.contains("X", NbtElement.NUMBER_TYPE) && leashNbt.contains("Y", NbtElement.NUMBER_TYPE) && leashNbt.contains("Z", NbtElement.NUMBER_TYPE))
+            {
+                BlockPos pos = new BlockPos(leashNbt.getInt("X"), leashNbt.getInt("Y"), leashNbt.getInt("Z"));
+                mob.attachLeash(LeashKnotEntity.getOrCreate(mc.world, pos), false);
+            }
         }
     }
 

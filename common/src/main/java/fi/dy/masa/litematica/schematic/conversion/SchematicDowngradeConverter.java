@@ -8,14 +8,13 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import com.mojang.serialization.JsonOps;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.TextCodecs;
+import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -713,7 +712,7 @@ public class SchematicDowngradeConverter
 
     private static boolean needsDamageTag(String id)
     {
-        ItemStack stack = InventoryUtils.getItemStackFromString(id);
+        ItemStack stack = fi.dy.masa.litematica.util.InventoryUtils.getItemStackFromString(id);
 
         return stack != null && !stack.isEmpty() && stack.isDamageable();
     }
@@ -1136,7 +1135,7 @@ public class SchematicDowngradeConverter
         for (String key : oldLevels.getKeys())
         {
             NbtCompound newEntry = new NbtCompound();
-            Identifier id = Identifier.of(key);
+            Identifier id = new Identifier(key);
             if (shortInt)
             {
                 newEntry.putShort("lvl", (short) oldLevels.getInt(key));
@@ -1164,7 +1163,7 @@ public class SchematicDowngradeConverter
 
          */
 
-        MutableText oldName = BlockEntity.tryParseCustomName(nameTag.getString(key), registry).copy();
+        MutableText oldName = Text.Serializer.fromJson(nameTag.getString(key));
         //MutableText oldName = (MutableText) NbtBlockUtils.getCustomNameFromNbt(nameTag, registry, key);
         return legacyTextDeserializer(oldName, registry);
     }
@@ -1173,7 +1172,7 @@ public class SchematicDowngradeConverter
     {
         try
         {
-            JsonElement element = TextCodecs.CODEC.encodeStart(registry.getOps(JsonOps.INSTANCE), oldText).getOrThrow();
+            JsonElement element = Text.Serializer.toJsonTree(oldText);
             return new GsonBuilder().disableHtmlEscaping().create().toJson(element);
         }
         catch (Exception err)
@@ -1187,7 +1186,7 @@ public class SchematicDowngradeConverter
     {
         try
         {
-            return TextCodecs.CODEC.parse(registry.getOps(JsonOps.INSTANCE), JsonParser.parseString(json)).getOrThrow().copy();
+            return Text.Serializer.fromJson(JsonParser.parseString(json)).copy();
         }
         catch (Exception err)
         {
@@ -1519,7 +1518,7 @@ public class SchematicDowngradeConverter
 
                 if (disp != null)
                 {
-                    name = disp.getLiteralString();
+                    name = disp.getString();
                 }
 
                 if (name == null)
@@ -1544,7 +1543,7 @@ public class SchematicDowngradeConverter
 
                 if (disp != null)
                 {
-                    name = disp.getLiteralString();
+                    name = disp.getString();
                 }
 
                 if (name == null)
@@ -1597,7 +1596,7 @@ public class SchematicDowngradeConverter
     private static NbtElement processFlowerPos(NbtCompound oldNbt, String key)
     {
         NbtCompound flowerOut = new NbtCompound();
-        BlockPos flowerPos = NbtHelper.toBlockPos(oldNbt, key).orElse(null);
+        BlockPos flowerPos = NbtHelper.toBlockPos(oldNbt.getCompound(key));
         // BlockPos flowerPos = oldNbt.get(key, BlockPos.CODEC, registryManager.getOps(NbtOps.INSTANCE)).orElse(null);
 
         if (flowerPos != null)

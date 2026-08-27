@@ -277,7 +277,7 @@ public class MaterialListHudRenderer implements IInfoHudRenderer
         for (Slot slot : slots)
         {
             if (slot.hasStack() &&
-                (fi.dy.masa.malilib.util.InventoryUtils.areStacksEqualIgnoreNbt(slot.getStack(), referenceItem) ||
+                (fi.dy.masa.malilib.util.InventoryUtils.areStacksEqual(slot.getStack(), referenceItem) ||
                  InventoryUtils.doesShulkerBoxContainItem(slot.getStack(), referenceItem) ||
                  InventoryUtils.doesBundleContainItem(slot.getStack(), referenceItem)))
             {

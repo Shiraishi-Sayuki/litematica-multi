@@ -292,7 +292,7 @@ public class SchematicPlacingUtils
 
                             try
                             {
-                                te.read(teNBT, world.getRegistryManager());
+                                te.readNbt(teNBT);
 
                                 if (ignoreInventories && te instanceof Inventory)
                                 {
@@ -504,14 +504,14 @@ public class SchematicPlacingUtils
                     {
                         Direction right = paintingEntity.getHorizontalFacing().rotateYCounterclockwise();
 
-                        if ((paintingEntity.getVariant().value().width() % 2) == 0 &&
+                        if ((paintingEntity.getVariant().value().getWidth() % 2) == 0 &&
                             right.getDirection() == AxisDirection.POSITIVE)
                         {
                             x -= 1.0 * right.getOffsetX();
                             z -= 1.0 * right.getOffsetZ();
                         }
 
-                        if ((paintingEntity.getVariant().value().height() % 2) == 0)
+                        if ((paintingEntity.getVariant().value().getHeight() % 2) == 0)
                         {
                             y -= 1.0;
                         }

@@ -538,8 +538,8 @@ public class SchematicConversionMaps
 
         switch (id)
         {
-            case "minecraft:pale_oak_boat" -> newId = Identifier.ofVanilla("oak_boat");
-            case "minecraft:pale_oak_chest_boat" -> newId = Identifier.ofVanilla("oak_chest_boat");
+            case "minecraft:pale_oak_boat" -> newId = Identifier.of("minecraft","oak_boat");
+            case "minecraft:pale_oak_chest_boat" -> newId = Identifier.of("minecraft","oak_chest_boat");
         }
 
         if (newId != null)
@@ -573,109 +573,109 @@ public class SchematicConversionMaps
         {
             case "minecraft:oak_boat", "minecraft:pale_oak_boat" ->
             {
-                newId = Identifier.ofVanilla("boat");
+                newId = Identifier.of("minecraft","boat");
                 type = BoatEntity.Type.OAK;
                 boatFix = true;
             }
             case "minecraft:spruce_boat" ->
             {
-                newId = Identifier.ofVanilla("boat");
+                newId = Identifier.of("minecraft","boat");
                 type = BoatEntity.Type.SPRUCE;
                 boatFix = true;
             }
             case "minecraft:birch_boat" ->
             {
-                newId = Identifier.ofVanilla("boat");
+                newId = Identifier.of("minecraft","boat");
                 type = BoatEntity.Type.BIRCH;
                 boatFix = true;
             }
             case "minecraft:jungle_boat" ->
             {
-                newId = Identifier.ofVanilla("boat");
+                newId = Identifier.of("minecraft","boat");
                 type = BoatEntity.Type.JUNGLE;
                 boatFix = true;
             }
             case "minecraft:acacia_boat" ->
             {
-                newId = Identifier.ofVanilla("boat");
+                newId = Identifier.of("minecraft","boat");
                 type = BoatEntity.Type.ACACIA;
                 boatFix = true;
             }
             case "minecraft:cherry_boat" ->
             {
-                newId = Identifier.ofVanilla("boat");
+                newId = Identifier.of("minecraft","boat");
                 type = BoatEntity.Type.CHERRY;
                 boatFix = true;
             }
             case "minecraft:dark_oak_boat" ->
             {
-                newId = Identifier.ofVanilla("boat");
+                newId = Identifier.of("minecraft","boat");
                 type = BoatEntity.Type.DARK_OAK;
                 boatFix = true;
             }
             case "minecraft:mangrove_boat" ->
             {
-                newId = Identifier.ofVanilla("boat");
+                newId = Identifier.of("minecraft","boat");
                 type = BoatEntity.Type.MANGROVE;
                 boatFix = true;
             }
             case "minecraft:bamboo_raft" ->
             {
-                newId = Identifier.ofVanilla("boat");
+                newId = Identifier.of("minecraft","boat");
                 type = BoatEntity.Type.BAMBOO;
                 boatFix = true;
             }
             case "minecraft:oak_chest_boat", "minecraft:pale_oak_chest_boat" ->
             {
-                newId = Identifier.ofVanilla("chest_boat");
+                newId = Identifier.of("minecraft","chest_boat");
                 type = BoatEntity.Type.OAK;
                 boatFix = true;
             }
             case "minecraft:spruce_chest_boat" ->
             {
-                newId = Identifier.ofVanilla("chest_boat");
+                newId = Identifier.of("minecraft","chest_boat");
                 type = BoatEntity.Type.SPRUCE;
                 boatFix = true;
             }
             case "minecraft:birch_chest_boat" ->
             {
-                newId = Identifier.ofVanilla("chest_boat");
+                newId = Identifier.of("minecraft","chest_boat");
                 type = BoatEntity.Type.BIRCH;
                 boatFix = true;
             }
             case "minecraft:jungle_chest_boat" ->
             {
-                newId = Identifier.ofVanilla("chest_boat");
+                newId = Identifier.of("minecraft","chest_boat");
                 type = BoatEntity.Type.JUNGLE;
                 boatFix = true;
             }
             case "minecraft:acacia_chest_boat" ->
             {
-                newId = Identifier.ofVanilla("chest_boat");
+                newId = Identifier.of("minecraft","chest_boat");
                 type = BoatEntity.Type.ACACIA;
                 boatFix = true;
             }
             case "minecraft:cherry_chest_boat" ->
             {
-                newId = Identifier.ofVanilla("chest_boat");
+                newId = Identifier.of("minecraft","chest_boat");
                 type = BoatEntity.Type.CHERRY;
                 boatFix = true;
             }
             case "minecraft:dark_oak_chest_boat" ->
             {
-                newId = Identifier.ofVanilla("chest_boat");
+                newId = Identifier.of("minecraft","chest_boat");
                 type = BoatEntity.Type.DARK_OAK;
                 boatFix = true;
             }
             case "minecraft:mangrove_chest_boat" ->
             {
-                newId = Identifier.ofVanilla("chest_boat");
+                newId = Identifier.of("minecraft","chest_boat");
                 type = BoatEntity.Type.MANGROVE;
                 boatFix = true;
             }
             case "minecraft:bamboo_chest_raft" ->
             {
-                newId = Identifier.ofVanilla("chest_boat");
+                newId = Identifier.of("minecraft","chest_boat");
                 type = BoatEntity.Type.BAMBOO;
                 boatFix = true;
             }
@@ -683,13 +683,13 @@ public class SchematicConversionMaps
             {
                 if (id.contains("_chest_boat"))
                 {
-                    newId = Identifier.ofVanilla("chest_boat");
+                    newId = Identifier.of("minecraft","chest_boat");
                     type = BoatEntity.Type.OAK;
                     boatFix = true;
                 }
                 else if (id.contains("_boat"))
                 {
-                    newId = Identifier.ofVanilla("boat");
+                    newId = Identifier.of("minecraft","boat");
                     type = BoatEntity.Type.OAK;
                     boatFix = true;
                 }
