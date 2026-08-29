@@ -1,0 +1,36 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "LGPLv3"
+
+[[mods]]
+modId = "litematica"
+version = "${mod_version}"
+displayName = "Litematica"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/litematica"
+logoFile = "assets/litematica/icon.png"
+authors = "masa, Shiraishi Sayuki (multiloader port)"
+description = "A modern schematic mod - multiloader port for Fabric and NeoForge"
+
+[[mixins]]
+config = "mixins.litematica.json"
+
+[[dependencies.litematica]]
+modId = "neoforge"
+type = "required"
+versionRange = "[26.2,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.litematica]]
+modId = "minecraft"
+type = "required"
+versionRange = "[26.2,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.litematica]]
+modId = "malilib"
+type = "required"
+versionRange = "[0.26.2,)"
+ordering = "AFTER"
+side = "CLIENT"
